@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto py-12 px-6">
+<div class="max-w-7xl mx-auto py-8 px-6">
     <div class="relative">
         <!-- Abstract Decoration -->
         <div
@@ -11,10 +11,10 @@
             class="absolute top-20 -right-40 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[150px] pointer-events-none">
         </div>
 
-        <div class="text-center mb-24 relative z-10 pt-10">
+        <div class="text-center mb-12 relative z-10 pt-10">
             <h2 class="text-4xl md:text-6xl font-900 text-white tracking-tight mb-4 uppercase leading-[1.1]">
                 What's on <span class="inline-block"
-                    style="background: linear-gradient(to right, #F37021, #FF9B44); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">your
+                    style="background: linear-gradient(to right, #F37021, #FF9B44); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">your
                     mind?</span>
             </h2>
             <p
@@ -23,18 +23,18 @@
         </div>
 
         <!-- Hub Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-32 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16 relative z-10">
             <!-- Sports Card -->
             <a href="/dashboard/sports"
-                class="group relative block rounded-[3rem] overflow-hidden glass hover:border-spjimr-orange/30 transition-all duration-700 transform hover:-translate-y-3">
+                class="group relative block rounded-[2.5rem] overflow-hidden glass hover:border-spjimr-orange/30 transition-all duration-700 transform hover:-translate-y-2">
                 <div
                     class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                 </div>
                 <div
-                    class="h-64 bg-[url('https://images.unsplash.com/photo-1541252260730-0412e8e2108e?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 opacity-20">
+                    class="h-48 bg-[url('https://images.unsplash.com/photo-1541252260730-0412e8e2108e?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 opacity-20">
                 </div>
                 <div
-                    class="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent">
+                    class="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent">
                     <span
                         class="px-4 py-1.5 bg-orange-500/10 text-spjimr-orange text-[9px] font-900 rounded-full border border-orange-500/20 uppercase tracking-[0.2em] mb-4 inline-block">Sports
                         Hub</span>
@@ -47,15 +47,15 @@
 
             <!-- Cultural Card -->
             <a href="/dashboard/cultural"
-                class="group relative block rounded-[3rem] overflow-hidden glass hover:border-purple-500/30 transition-all duration-700 transform hover:-translate-y-3">
+                class="group relative block rounded-[2.5rem] overflow-hidden glass hover:border-purple-500/30 transition-all duration-700 transform hover:-translate-y-2">
                 <div
                     class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                 </div>
                 <div
-                    class="h-64 bg-[url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 opacity-20">
+                    class="h-48 bg-[url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 opacity-20">
                 </div>
                 <div
-                    class="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent">
+                    class="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent">
                     <span
                         class="px-4 py-1.5 bg-purple-500/10 text-purple-400 text-[9px] font-900 rounded-full border border-purple-500/20 uppercase tracking-[0.2em] mb-4 inline-block">Cultural
                         Hub</span>
@@ -68,15 +68,15 @@
 
             <!-- Academic Card -->
             <a href="/dashboard/academic"
-                class="group relative block rounded-[3rem] overflow-hidden glass hover:border-blue-500/30 transition-all duration-700 transform hover:-translate-y-3">
+                class="group relative block rounded-[2.5rem] overflow-hidden glass hover:border-blue-500/30 transition-all duration-700 transform hover:-translate-y-2">
                 <div
                     class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                 </div>
                 <div
-                    class="h-64 bg-[url('https://images.unsplash.com/photo-1523050335456-c466432a76f2?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 opacity-20">
+                    class="h-48 bg-[url('https://images.unsplash.com/photo-1523050335456-c466432a76f2?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 opacity-20">
                 </div>
                 <div
-                    class="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent">
+                    class="absolute inset-x-0 bottom-0 p-8 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent">
                     <span
                         class="px-4 py-1.5 bg-blue-500/10 text-blue-400 text-[9px] font-900 rounded-full border border-blue-500/20 uppercase tracking-[0.2em] mb-4 inline-block">Academic
                         Hub</span>
@@ -90,7 +90,7 @@
     </div>
 
     <!-- Dynamic Campus Calendar -->
-    <div class="glass rounded-[3rem] p-10 relative overflow-visible border-white/5 shadow-2xl">
+    <div class="glass rounded-[2rem] p-8 relative overflow-visible border-white/5 shadow-2xl">
         <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 relative z-10">
             <div>
                 <h3 class="text-2xl font-900 text-white tracking-tight">{{ month_name }} {{ year }}</h3>
