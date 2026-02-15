@@ -1,9 +1,8 @@
 {
-  "rewriteDestinations": true,
   "rewrites": [
     {
-      "source": "/(index.py)?",
-      "destination": "/api/index"
+      "source": "/static/(.*)",
+      "destination": "/static/$1"
     },
     {
       "source": "/(.*)",
