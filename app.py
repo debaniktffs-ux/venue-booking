@@ -493,7 +493,8 @@ time_slots = [
 
 with gr.Blocks(title="SPJIMR Venue Management") as demo:
     with gr.Row(elem_classes="header-container"):
-        gr.Image("spjimr_logo.png", show_label=False, container=False, width=130, interactive=False)
+        logo_path = os.path.join(os.path.dirname(__file__), "spjimr_logo.png")
+        gr.Image(logo_path, show_label=False, container=False, width=130, interactive=False)
         with gr.Column(elem_classes="title-block"):
             gr.Markdown("# Venue Booking Portal")
             gr.Markdown("Academic Block & Cultural Events")
