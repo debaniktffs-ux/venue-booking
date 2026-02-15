@@ -158,8 +158,8 @@
                         <header class="mb-4 flex items-center justify-between border-b border-white/5 pb-2">
                             <span class="text-[9px] font-900 text-gray-400 uppercase tracking-widest">{{ month_name[:3]
                                 }} {{ day }} ({{ ['MON','TUE','WED','THU','FRI','SAT','SUN'][day_idx] }})</span>
-                            <span class="text-[8px] font-900 text-white/40">{{ bookings_by_day.get(day)|length if
-                                bookings_by_day.get(day) else 0 }} Event(s)</span>
+                            <span class="text-[8px] font-900 text-white/40">{{ (bookings_by_day.get(day) or [])|length
+                                }} Event(s)</span>
                         </header>
 
                         <div class="space-y-3 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
