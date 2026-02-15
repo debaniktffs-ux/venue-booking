@@ -56,142 +56,117 @@
         </a>
     </div>
 
-    <!-- Interactive Campus Calendar -->
-    <div class="glass rounded-[4rem] p-16 relative overflow-visible border-white/5 shadow-2xl">
-        <header class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 relative z-10">
+    <!-- Dynamic Campus Calendar -->
+    <div class="glass rounded-[3rem] p-10 relative overflow-visible border-white/5">
+        <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 relative z-10">
             <div>
-                <h3 class="text-4xl font-900 text-white tracking-tighter leading-none mb-4">{{ month_name }} {{ year }}
-                </h3>
-                <div class="flex items-center gap-6">
-                    <p class="text-[10px] text-gray-500 font-900 uppercase tracking-[0.4em]">Unified Campus Rhythm</p>
-                    <div class="h-px flex-1 bg-white/5 min-w-[100px]"></div>
-                </div>
+                <h3 class="text-2xl font-900 text-white tracking-tight">{{ month_name }} {{ year }}</h3>
+                <p class="text-[8px] text-gray-500 font-900 uppercase tracking-[0.4em] mt-1">Unified Campus Schedule</p>
             </div>
 
-            <!-- Legend (Sleeker) -->
-            <div class="flex flex-wrap gap-3 bg-white/[0.02] p-2 rounded-2xl border border-white/5 backdrop-blur-xl">
-                <div
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/5 transition-colors cursor-help group">
-                    <div class="w-2.5 h-2.5 rounded-full bg-spjimr-orange shadow-lg shadow-orange-500/40"></div>
-                    <span
-                        class="text-[9px] font-900 text-gray-500 uppercase tracking-widest group-hover:text-spjimr-orange transition-colors">Sports</span>
+            <!-- Compact Legend -->
+            <div
+                class="flex items-center gap-4 bg-white/[0.02] px-4 py-2 rounded-xl border border-white/5 backdrop-blur-xl">
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-spjimr-orange shadow-lg shadow-orange-500/40"></div>
+                    <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Sports</span>
                 </div>
-                <div
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/5 transition-colors cursor-help group">
-                    <div class="w-2.5 h-2.5 rounded-full bg-purple-500 shadow-lg shadow-purple-500/40"></div>
-                    <span
-                        class="text-[9px] font-900 text-gray-500 uppercase tracking-widest group-hover:text-purple-400 transition-colors">Cultural</span>
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-lg shadow-purple-500/40"></div>
+                    <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Cultural</span>
                 </div>
-                <div
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/5 transition-colors cursor-help group">
-                    <div class="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-lg shadow-blue-500/40"></div>
-                    <span
-                        class="text-[9px] font-900 text-gray-500 uppercase tracking-widest group-hover:text-blue-400 transition-colors">Academic</span>
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-lg shadow-blue-500/40"></div>
+                    <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Academic</span>
                 </div>
-                <div
-                    class="flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/5 transition-colors cursor-help group">
-                    <div class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-lg shadow-red-500/40"></div>
-                    <span
-                        class="text-[9px] font-900 text-gray-500 uppercase tracking-widest group-hover:text-red-400 transition-colors">Holidays</span>
+                <div class="flex items-center gap-2">
+                    <div class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-lg shadow-red-500/40"></div>
+                    <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Holidays</span>
                 </div>
             </div>
         </header>
 
-        <div class="grid grid-cols-7 gap-6 relative z-10">
+        <div class="grid grid-cols-7 gap-4 relative z-10">
             {% for day_name in ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'] %}
-            <div class="text-center text-[10px] font-900 text-gray-600 uppercase tracking-[0.5em] pb-8">{{ day_name }}
+            <div class="text-center text-[9px] font-900 text-gray-600 uppercase tracking-[0.3em] pb-4">{{ day_name }}
             </div>
             {% endfor %}
 
             {% for week in calendar %}
             {% for day in week %}
-            <div
-                class="group relative min-h-[140px] rounded-[2rem] p-6 transition-all duration-500 border border-white/5
+            <div class="group relative min-h-[100px] rounded-[1.5rem] p-4 transition-all duration-300 border border-white/5
                     {% if day == 0 %} bg-transparent border-transparent
                     {% elif day == today %} bg-white/5 border-white/10 ring-1 ring-white/10
-                    {% else %} bg-white/[0.01] hover:bg-white/[0.04] hover:border-white/10 hover:shadow-2xl hover:shadow-black/50 hover:scale-[1.02] {% endif %}">
+                    {% else %} bg-white/[0.01] hover:bg-white/5 hover:border-white/10 hover:scale-[1.02] {% endif %}">
 
                 {% if day != 0 %}
                 <span
-                    class="text-2xl font-900 absolute top-6 right-8 transition-colors duration-500 
-                        {% if day == today %} text-white {% else %} text-gray-700 group-hover:text-gray-400 {% endif %}">{{
+                    class="text-lg font-900 absolute top-4 right-5 
+                        {% if day == today %} text-white {% else %} text-gray-800 group-hover:text-gray-500 transition-colors {% endif %}">{{
                     day }}</span>
 
-                <div class="mt-8 space-y-2">
-                    <!-- Summary Dots -->
+                <div class="mt-6 flex flex-wrap gap-1">
                     {% if bookings_by_day.get(day) %}
-                    <div class="flex flex-wrap gap-1.5 pt-4">
-                        {% set shown_cats = [] %}
-                        {% for b in bookings_by_day.get(day)|sort(attribute='Category') %}
-                        {% if b.Category not in shown_cats %}
-                        <div
-                            class="w-2 h-2 rounded-full 
-                                    {% if b.Category == 'sports' %} bg-spjimr-orange shadow-sm shadow-orange-500/50 
-                                    {% elif b.Category == 'cultural' %} bg-purple-500 shadow-sm shadow-purple-500/50 
-                                    {% elif b.Category == 'academic' %} bg-blue-500 shadow-sm shadow-blue-500/50 {% endif %}">
-                        </div>
-                        {% set _ = shown_cats.append(b.Category) %}
-                        {% endif %}
-                        {% endfor %}
+                    {% set shown_cats = [] %}
+                    {% for b in bookings_by_day.get(day)|sort(attribute='Category') %}
+                    {% if b.Category not in shown_cats %}
+                    <div class="w-1.5 h-1.5 rounded-full 
+                                    {% if b.Category == 'sports' %} bg-spjimr-orange 
+                                    {% elif b.Category == 'cultural' %} bg-purple-500 
+                                    {% elif b.Category == 'academic' %} bg-blue-500 {% endif %}">
                     </div>
+                    {% set _ = shown_cats.append(b.Category) %}
+                    {% endif %}
+                    {% endfor %}
                     {% endif %}
 
-                    <!-- Holiday Badge -->
                     {% if holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) %}
-                    <div class="mt-2 inline-block px-2 py-0.5 bg-red-500/10 border border-red-500/20 rounded-md">
-                        <span class="text-[7px] font-900 text-red-500 uppercase tracking-tighter">{{
-                            holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) }}</span>
-                    </div>
+                    <div class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
                     {% endif %}
                 </div>
 
-                <!-- HOVER REVEAL PANEL -->
+                <!-- HOVER REVEAL PANEL (Compact) -->
                 {% if bookings_by_day.get(day) or holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) %}
                 <div
-                    class="absolute left-1/2 -translate-x-1/2 top-4 opacity-0 group-hover:opacity-100 group-hover:top-[-10px] transition-all duration-300 pointer-events-none z-[100] w-[260px]">
-                    <div
-                        class="glass p-5 rounded-3xl shadow-2xl border-white/10 backdrop-blur-3xl ring-1 ring-white/10">
-                        <header class="mb-4 flex items-center justify-between">
-                            <span class="text-[9px] font-900 text-gray-500 uppercase tracking-widest">February {{ day
+                    class="absolute left-1/2 -translate-x-1/2 bottom-[110%] mb-2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-[100] w-[240px]">
+                    <div class="glass p-4 rounded-2xl shadow-2xl border-white/10 backdrop-blur-3xl ring-1 ring-white/5">
+                        <header class="mb-3 flex items-center justify-between border-b border-white/5 pb-2">
+                            <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Feb {{ day
                                 }}</span>
-                            <span class="text-[9px] font-900 text-gray-400 bg-white/5 px-2 py-0.5 rounded-full">{{
-                                bookings_by_day.get(day)|length if bookings_by_day.get(day) else 0 }} Sessions</span>
+                            <span class="text-[8px] font-900 text-white/40">{{ bookings_by_day.get(day)|length if
+                                bookings_by_day.get(day) else 0 }} Event(s)</span>
                         </header>
 
-                        <div class="space-y-3 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+                        <div class="space-y-2 max-h-[250px] overflow-y-auto pr-1 custom-scrollbar">
                             {% if holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) %}
-                            <div class="p-3 bg-red-500/10 border border-red-500/20 rounded-xl">
-                                <p class="text-[10px] font-900 text-red-500 uppercase tracking-widest">🎉 {{
+                            <div class="px-2 py-1.5 bg-red-500/10 border border-red-500/20 rounded-lg">
+                                <p class="text-[9px] font-900 text-red-500 uppercase tracking-tighter">🎉 {{
                                     holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) }}</p>
                             </div>
                             {% endif %}
 
                             {% for b in bookings_by_day.get(day) %}
-                            <div
-                                class="p-3 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/10 transition-colors">
-                                <div class="flex items-start justify-between gap-2 mb-1">
-                                    <h4 class="text-[10px] font-800 text-white truncate max-w-[120px]">{{ b.Venue }}
-                                    </h4>
+                            <div class="p-2 rounded-lg bg-white/[0.02] border border-white/5">
+                                <div class="flex items-center justify-between gap-2 mb-0.5">
+                                    <h4 class="text-[9px] font-800 text-white truncate max-w-[110px]">{{ b.Venue }}</h4>
                                     <span
-                                        class="text-[7px] font-900 uppercase tracking-tighter px-1.5 py-0.5 rounded
+                                        class="text-[6px] font-900 uppercase px-1 py-0.5 rounded
                                             {% if b.Category == 'sports' %} bg-orange-500/20 text-spjimr-orange 
                                             {% elif b.Category == 'cultural' %} bg-purple-500/20 text-purple-400 
                                             {% elif b.Category == 'academic' %} bg-blue-500/20 text-blue-400 {% endif %}">
                                         {{ b.Category }}
                                     </span>
                                 </div>
-                                <div
-                                    class="flex items-center justify-between text-[8px] font-bold text-gray-500 group/item">
-                                    <span class="truncate max-w-[80px]">{{ b.Requested_By }}</span>
-                                    <span class="text-white/40">{{ b.Time_Slot }}</span>
-                                </div>
+                                <p class="text-[7px] font-bold text-gray-500 flex justify-between">
+                                    <span>{{ b.Requested_By }}</span>
+                                    <span class="text-white/30">{{ b.Time_Slot }}</span>
+                                </p>
                             </div>
                             {% endfor %}
                         </div>
                     </div>
                 </div>
                 {% endif %}
-
                 {% endif %}
             </div>
             {% endfor %}
