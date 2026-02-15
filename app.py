@@ -491,7 +491,7 @@ time_slots = [
     "10:00 PM - 12:00 AM"
 ]
 
-with gr.Blocks(title="SPJIMR Venue Management") as demo:
+with gr.Blocks(title="SPJIMR Venue Management", css=CUSTOM_CSS, theme=gr.themes.Default(primary_hue="orange", secondary_hue="slate")) as demo:
     with gr.Row(elem_classes="header-container"):
         logo_path = os.path.join(os.path.dirname(__file__), "spjimr_logo.png")
         gr.Image(logo_path, show_label=False, container=False, width=130, interactive=False)
