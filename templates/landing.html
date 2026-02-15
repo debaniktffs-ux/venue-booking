@@ -3,11 +3,12 @@
 {% block content %}
 <div class="max-w-6xl mx-auto py-12 px-6">
     <div class="text-center mb-16">
-        <h2 class="text-4xl font-900 text-white tracking-tight mb-4 uppercase">Hub Selection</h2>
-        <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-xs">Choose your venue category to begin</p>
+        <h2 class="text-4xl font-900 text-white tracking-tight mb-4 uppercase">What's on your mind?</h2>
+        <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-xs">Choose your category or check the campus
+            schedule</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
         <!-- Sports Card -->
         <a href="/dashboard/sports"
             class="group relative block rounded-3xl overflow-hidden glass hover:ring-2 hover:ring-orange-500/50 transition-all duration-500 transform hover:-translate-y-2">
@@ -19,17 +20,9 @@
                     <span
                         class="px-3 py-1 bg-orange-500/20 text-spjimr-orange text-[10px] font-900 rounded-full border border-orange-500/30 uppercase tracking-widest">Active
                         Now</span>
-                    <div
-                        class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center text-spjimr-orange">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
-                        </svg>
-                    </div>
                 </div>
                 <h3 class="text-2xl font-800 text-white mb-2">Sports Hub</h3>
-                <p class="text-gray-400 text-xs font-medium leading-relaxed">Rec Centre, Squash Courts, Table Tennis &
-                    More</p>
+                <p class="text-gray-400 text-xs font-medium leading-relaxed">Rec Centre, Squash, TT & More</p>
             </div>
         </a>
 
@@ -43,15 +36,9 @@
                 <div class="flex items-center justify-between mb-4">
                     <span
                         class="px-3 py-1 bg-purple-500/20 text-purple-400 text-[10px] font-900 rounded-full border border-purple-500/30 uppercase tracking-widest">Premium</span>
-                    <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M11.5 22C6.25 22 2 17.75 2 12.5S6.25 3 11.5 3 21 7.25 21 12.5 16.75 22 11.5 22zm0-17.5C7.36 4.5 4 7.86 4 12s3.36 7.5 7.5 7.5 7.5-3.36 7.5-7.5-3.36-7.5-7.5-7.5z" />
-                        </svg>
-                    </div>
                 </div>
                 <h3 class="text-2xl font-800 text-white mb-2">Cultural Hub</h3>
-                <p class="text-gray-400 text-xs font-medium leading-relaxed">Auditoriums, Recess Area & Gala Stages</p>
+                <p class="text-gray-400 text-xs font-medium leading-relaxed">Auditoriums & Gala Stages</p>
             </div>
         </a>
 
@@ -65,16 +52,97 @@
                 <div class="flex items-center justify-between mb-4">
                     <span
                         class="px-3 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-900 rounded-full border border-blue-500/30 uppercase tracking-widest">Official</span>
-                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
-                        </svg>
-                    </div>
                 </div>
                 <h3 class="text-2xl font-800 text-white mb-2">Academic Hub</h3>
-                <p class="text-gray-400 text-xs font-medium leading-relaxed">NCR Classrooms, Domes & Study Blocks</p>
+                <p class="text-gray-400 text-xs font-medium leading-relaxed">NCR Rooms & Study Blocks</p>
             </div>
         </a>
+    </div>
+
+    <!-- Combined Campus Calendar -->
+    <div class="glass rounded-[3rem] p-12 relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-12 opacity-5">
+            <svg class="w-64 h-64 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z" />
+            </svg>
+        </div>
+
+        <header class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 relative">
+            <div>
+                <h3 class="text-3xl font-900 text-white tracking-tight">{{ month_name }} {{ year }}</h3>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-[0.3em] mt-2">Unified Campus
+                    Availability</p>
+            </div>
+
+            <!-- Legend -->
+            <div class="flex flex-wrap gap-4 bg-black/20 p-4 rounded-2xl border border-white/5">
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-spjimr-orange"></div>
+                    <span class="text-[9px] font-800 text-gray-400 uppercase tracking-tighter">Sports</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-purple-500"></div>
+                    <span class="text-[9px] font-800 text-gray-400 uppercase tracking-tighter">Cultural</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                    <span class="text-[9px] font-800 text-gray-400 uppercase tracking-tighter">Academic</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                    <span class="text-[9px] font-800 text-gray-400 uppercase tracking-tighter">Holidays</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-7 gap-4">
+            {% for day_name in ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'] %}
+            <div class="text-center text-[10px] font-900 text-gray-600 uppercase tracking-widest pb-4">{{ day_name }}
+            </div>
+            {% endfor %}
+
+            {% for week in calendar %}
+            {% for day in week %}
+            <div class="relative min-h-[100px] rounded-3xl p-4 transition-all border
+                    {% if day == 0 %} bg-transparent border-transparent
+                    {% elif day == today %} bg-white/5 border-white/10 ring-2 ring-white/10
+                    {% else %} bg-slate-900/50 border-white/5 hover:border-white/10 {% endif %}">
+
+                {% if day != 0 %}
+                <span class="text-lg font-900 {% if day == today %} text-white {% else %} text-gray-600 {% endif %}">{{
+                    day }}</span>
+
+                <div class="mt-2 space-y-1">
+                    <!-- Holiday Marker -->
+                    {% set date_str = year ~ "-" ~ (request.query_params.get('month') or "02") ~ "-" ~ (day if day > 9
+                    else "0" ~ day) %}
+                    {% if holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) or holidays.get("2026-01-" ~ (day
+                    if day > 9 else "0" ~ day)) %}
+                    <!-- Simple check for the month, ideally would use full date -->
+                    <div class="text-[8px] font-900 text-red-500 uppercase leading-none truncate">
+                        {{ holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) }}
+                    </div>
+                    {% endif %}
+
+                    <!-- Booking Markers -->
+                    {% if bookings_by_day.get(day) %}
+                    <div class="flex gap-1.5 pt-1">
+                        {% for cat in bookings_by_day.get(day) %}
+                        <div class="w-1.5 h-1.5 rounded-full 
+                                {% if cat == 'sports' %} bg-spjimr-orange 
+                                {% elif cat == 'cultural' %} bg-purple-500 
+                                {% elif cat == 'academic' %} bg-blue-500 {% endif %}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}

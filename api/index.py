@@ -78,6 +78,17 @@ TIME_SLOTS = [
     "08:00 PM - 10:00 PM", "10:00 PM - 12:00 AM"
 ]
 
+GOVT_HOLIDAYS = {
+    "2026-01-26": "Republic Day",
+    "2026-03-04": "Holi",
+    "2026-03-27": "Eid-ul-Fitr",
+    "2026-04-10": "Good Friday",
+    "2026-08-15": "Independence Day",
+    "2026-10-02": "Gandhi Jayanti",
+    "2026-10-21": "Dussehra",
+    "2026-11-08": "Diwali",
+}
+
 # --- SETUP ---
 templates = Jinja2Templates(directory="templates")
 if not os.path.exists("static"):
@@ -132,7 +143,32 @@ def save_booking_data(category, type_val, venue, date, time_slot, requested_by):
 # --- ROUTES ---
 @app.get("/", response_class=HTMLResponse)
 async def landing(request: Request):
-    return templates.TemplateResponse("landing.html", {"request": request})
+    df = load_bookings()
+    today = dt_date.today()
+    cal = calendar.monthcalendar(today.year, today.month)
+    
+    # Categorize booked days for unified calendar
+    bookings_by_day = {}
+    if not df.empty:
+        df['Date_obj'] = pd.to_datetime(df['Date'], errors='coerce')
+        current_month = df[df['Date_obj'].dt.month == today.month]
+        
+        for _, row in current_month.iterrows():
+            d = row['Date_obj'].day
+            cat = row['Category']
+            if d not in bookings_by_day:
+                bookings_by_day[d] = set()
+            bookings_by_day[d].add(cat)
+
+    return templates.TemplateResponse("landing.html", {
+        "request": request,
+        "calendar": cal,
+        "month_name": calendar.month_name[today.month],
+        "year": today.year,
+        "today": today.day,
+        "bookings_by_day": bookings_by_day,
+        "holidays": GOVT_HOLIDAYS
+    })
 
 @app.get("/dashboard/{category}", response_class=HTMLResponse)
 async def dashboard(request: Request, category: str):
