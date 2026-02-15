@@ -147,7 +147,7 @@ async def landing(request: Request):
     today = dt_date.today()
     cal = calendar.monthcalendar(today.year, today.month)
     
-    # Categorize booked days for unified calendar
+    # Detailed booking mapping for interactive calendar
     bookings_by_day = {}
     if not df.empty:
         df['Date_obj'] = pd.to_datetime(df['Date'], errors='coerce')
@@ -155,10 +155,16 @@ async def landing(request: Request):
         
         for _, row in current_month.iterrows():
             d = row['Date_obj'].day
-            cat = row['Category']
             if d not in bookings_by_day:
-                bookings_by_day[d] = set()
-            bookings_by_day[d].add(cat)
+                bookings_by_day[d] = []
+            
+            bookings_by_day[d].append({
+                "Category": row['Category'],
+                "Venue": row['Venue'],
+                "Time_Slot": row['Time_Slot'],
+                "Requested_By": row['Requested_By'],
+                "Type": row.get('Type', '')
+            })
 
     return templates.TemplateResponse("landing.html", {
         "request": request,
