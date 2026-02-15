@@ -171,11 +171,23 @@ async def book(
     requested_by: str = Form(...)
 ):
     final_venue = manual_venue if venue == "Other (Manual Entry)" and manual_venue else venue
+    
+    # Conflict Check
+    df = load_bookings()
+    if not df.empty:
+        conflict = df[
+            (df['Venue'] == final_venue) & 
+            (df['Date'] == date) & 
+            (df['Time_Slot'] == time_slot)
+        ]
+        if not conflict.empty:
+            error_msg = f"Conflict: {final_venue} is already reserved for {date} at {time_slot}."
+            return RedirectResponse(url=f"/?error={urllib.parse.quote(error_msg)}", status_code=303)
+
     try:
         save_booking_data(final_venue, date, time_slot, requested_by)
     except Exception as e:
-        # Pass error to index page via query param for feedback
-        return RedirectResponse(url=f"/?error={urllib.parse.quote(str(e))}", status_code=333)
+        return RedirectResponse(url=f"/?error={urllib.parse.quote(str(e))}", status_code=303)
     
     return RedirectResponse(url="/", status_code=303)
 
