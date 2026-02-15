@@ -4,8 +4,7 @@
 <div class="max-w-7xl mx-auto py-12 px-6">
     <div class="text-center mb-16">
         <h2 class="text-5xl font-900 text-white tracking-tight mb-4 uppercase">What's on your mind?</h2>
-        <p class="text-gray-500 font-bold uppercase tracking-[0.4em] text-xs">Navigate Hubs or Explore the Campus Rhythm
-        </p>
+        <p class="text-gray-500 font-bold uppercase tracking-[0.4em] text-xs">Explore Hubs or Track Campus Life</p>
     </div>
 
     <!-- Hub Cards -->
@@ -21,7 +20,7 @@
                     class="px-3 py-1 bg-orange-500/20 text-spjimr-orange text-[10px] font-900 rounded-full border border-orange-500/30 uppercase tracking-widest mb-4 inline-block">Sports
                     Hub</span>
                 <h3 class="text-3xl font-800 text-white mb-2">Game On</h3>
-                <p class="text-gray-400 text-sm font-medium">Rec Centre Courts & Team Activities</p>
+                <p class="text-gray-400 text-sm font-medium leading-tight">Courts & Team Games</p>
             </div>
         </a>
 
@@ -36,7 +35,7 @@
                     class="px-3 py-1 bg-purple-500/20 text-purple-400 text-[10px] font-900 rounded-full border border-purple-500/30 uppercase tracking-widest mb-4 inline-block">Cultural
                     Hub</span>
                 <h3 class="text-3xl font-800 text-white mb-2">Spotlight</h3>
-                <p class="text-gray-400 text-sm font-medium">Audi, Gala Stages & Performance Rooms</p>
+                <p class="text-gray-400 text-sm font-medium leading-tight">Auditoriums & Gala Stages</p>
             </div>
         </a>
 
@@ -51,13 +50,13 @@
                     class="px-3 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-900 rounded-full border border-blue-500/30 uppercase tracking-widest mb-4 inline-block">Academic
                     Hub</span>
                 <h3 class="text-3xl font-800 text-white mb-2">Class Adda</h3>
-                <p class="text-gray-400 text-sm font-medium">NCRs, Domes & Study Environments</p>
+                <p class="text-gray-400 text-sm font-medium leading-tight">PD Blocks & NCRs</p>
             </div>
         </a>
     </div>
 
     <!-- Dynamic Campus Calendar -->
-    <div class="glass rounded-[3rem] p-10 relative overflow-visible border-white/5">
+    <div class="glass rounded-[3rem] p-10 relative overflow-visible border-white/5 shadow-2xl">
         <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 relative z-10">
             <div>
                 <h3 class="text-2xl font-900 text-white tracking-tight">{{ month_name }} {{ year }}</h3>
@@ -69,98 +68,133 @@
                 class="flex items-center gap-4 bg-white/[0.02] px-4 py-2 rounded-xl border border-white/5 backdrop-blur-xl">
                 <div class="flex items-center gap-2">
                     <div class="w-1.5 h-1.5 rounded-full bg-spjimr-orange shadow-lg shadow-orange-500/40"></div>
-                    <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Sports</span>
+                    <span class="text-[8px] font-900 text-gray-400 uppercase tracking-widest">Sports</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 border-l border-white/10 pl-4">
                     <div class="w-1.5 h-1.5 rounded-full bg-purple-500 shadow-lg shadow-purple-500/40"></div>
-                    <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Cultural</span>
+                    <span class="text-[8px] font-900 text-gray-400 uppercase tracking-widest">Cultural</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 border-l border-white/10 pl-4">
                     <div class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-lg shadow-blue-500/40"></div>
-                    <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Academic</span>
+                    <span class="text-[8px] font-900 text-gray-400 uppercase tracking-widest">Academic</span>
                 </div>
-                <div class="flex items-center gap-2">
+                <div class="flex items-center gap-2 border-l border-white/10 pl-4">
                     <div class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-lg shadow-red-500/40"></div>
-                    <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Holidays</span>
+                    <span class="text-[8px] font-900 text-red-500 uppercase tracking-widest">Holidays</span>
                 </div>
             </div>
         </header>
 
         <div class="grid grid-cols-7 gap-4 relative z-10">
             {% for day_name in ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'] %}
-            <div class="text-center text-[9px] font-900 text-gray-600 uppercase tracking-[0.3em] pb-4">{{ day_name }}
+            <div class="text-center text-[9px] font-900 uppercase tracking-[0.4em] pb-4 
+                {% if day_name in ['SAT', 'SUN'] %} text-orange-400/80 {% else %} text-gray-600 {% endif %}">
+                {{ day_name }}
             </div>
             {% endfor %}
 
             {% for week in calendar %}
             {% for day in week %}
-            <div class="group relative min-h-[100px] rounded-[1.5rem] p-4 transition-all duration-300 border border-white/5
+            {% set day_idx = loop.index0 %} <!-- 0=Mon, 6=Sun in monthcalendar -->
+            <div class="group relative min-h-[110px] rounded-[1.8rem] p-5 transition-all duration-300 border
                     {% if day == 0 %} bg-transparent border-transparent
-                    {% elif day == today %} bg-white/5 border-white/10 ring-1 ring-white/10
-                    {% else %} bg-white/[0.01] hover:bg-white/5 hover:border-white/10 hover:scale-[1.02] {% endif %}">
+                    {% elif day == today %} bg-white/5 border-white/10 ring-1 ring-white/10 shadow-lg shadow-white/5
+                    {% else %} 
+                        {% if day_idx >= 5 %} bg-orange-500/[0.03] border-orange-500/10 hover:bg-orange-500/[0.08] 
+                        {% else %} bg-white/[0.01] border-white/5 hover:bg-white/5 {% endif %}
+                    {% endif %}">
 
                 {% if day != 0 %}
-                <span
-                    class="text-lg font-900 absolute top-4 right-5 
-                        {% if day == today %} text-white {% else %} text-gray-800 group-hover:text-gray-500 transition-colors {% endif %}">{{
-                    day }}</span>
+                <span class="text-xl font-900 absolute top-4 left-6 transition-colors duration-300
+                        {% if day == today %} text-white 
+                        {% elif day_idx >= 5 %} text-orange-300/60
+                        {% else %} text-gray-400 group-hover:text-gray-300 {% endif %}">{{ day }}</span>
 
-                <div class="mt-6 flex flex-wrap gap-1">
-                    {% if bookings_by_day.get(day) %}
-                    {% set shown_cats = [] %}
-                    {% for b in bookings_by_day.get(day)|sort(attribute='Category') %}
-                    {% if b.Category not in shown_cats %}
-                    <div class="w-1.5 h-1.5 rounded-full 
-                                    {% if b.Category == 'sports' %} bg-spjimr-orange 
-                                    {% elif b.Category == 'cultural' %} bg-purple-500 
-                                    {% elif b.Category == 'academic' %} bg-blue-500 {% endif %}">
+                <div class="mt-8 space-y-2">
+                    <!-- Holiday Inline Label -->
+                    {% set date_key = "2026-02-" ~ (day if day > 9 else "0" ~ day) %}
+                    {% if holidays.get(date_key) %}
+                    <div class="inline-block px-1.5 py-0.5 bg-red-500/10 border border-red-500/20 rounded-md">
+                        <span class="text-[7px] font-900 text-red-400 uppercase tracking-tighter">{{
+                            holidays.get(date_key) }}</span>
                     </div>
-                    {% set _ = shown_cats.append(b.Category) %}
-                    {% endif %}
-                    {% endfor %}
                     {% endif %}
 
-                    {% if holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) %}
-                    <div class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></div>
+                    <!-- Monday Closure Note -->
+                    {% if day_idx == 0 %}
+                    <div class="pt-1">
+                        <span
+                            class="text-[6px] font-900 text-gray-600 uppercase tracking-tighter leading-none block opacity-60">Rec
+                            Centre Closed</span>
+                    </div>
+                    {% endif %}
+
+                    <!-- Booking Markers -->
+                    {% if bookings_by_day.get(day) %}
+                    <div class="flex flex-wrap gap-1.5 pt-2">
+                        {% set shown_cats = [] %}
+                        {% for b in bookings_by_day.get(day)|sort(attribute='Category') %}
+                        {% if b.Category not in shown_cats %}
+                        <div
+                            class="w-1.5 h-1.5 rounded-full ring-1 ring-black/20
+                                    {% if b.Category == 'sports' %} bg-spjimr-orange shadow-sm shadow-orange-500/50 
+                                    {% elif b.Category == 'cultural' %} bg-purple-500 shadow-sm shadow-purple-500/50 
+                                    {% elif b.Category == 'academic' %} bg-blue-500 shadow-sm shadow-blue-500/50 {% endif %}">
+                        </div>
+                        {% set _ = shown_cats.append(b.Category) %}
+                        {% endif %}
+                        {% endfor %}
+                    </div>
                     {% endif %}
                 </div>
 
-                <!-- HOVER REVEAL PANEL (Compact) -->
-                {% if bookings_by_day.get(day) or holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) %}
+                <!-- HOVER REVEAL PANEL -->
+                {% if bookings_by_day.get(day) or holidays.get(date_key) or day_idx == 0 %}
                 <div
-                    class="absolute left-1/2 -translate-x-1/2 bottom-[110%] mb-2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-[100] w-[240px]">
-                    <div class="glass p-4 rounded-2xl shadow-2xl border-white/10 backdrop-blur-3xl ring-1 ring-white/5">
-                        <header class="mb-3 flex items-center justify-between border-b border-white/5 pb-2">
-                            <span class="text-[8px] font-900 text-gray-500 uppercase tracking-widest">Feb {{ day
-                                }}</span>
+                    class="absolute left-1/2 -translate-x-1/2 bottom-[115%] mb-2 opacity-0 group-hover:opacity-100 transition-all duration-400 pointer-events-none z-[100] w-[260px]">
+                    <div
+                        class="glass p-5 rounded-3xl shadow-2xl border-white/10 backdrop-blur-3xl ring-1 ring-white/10">
+                        <header class="mb-4 flex items-center justify-between border-b border-white/5 pb-2">
+                            <span class="text-[9px] font-900 text-gray-400 uppercase tracking-widest">Feb {{ day }} ({{
+                                ['MON','TUE','WED','THU','FRI','SAT','SUN'][day_idx] }})</span>
                             <span class="text-[8px] font-900 text-white/40">{{ bookings_by_day.get(day)|length if
                                 bookings_by_day.get(day) else 0 }} Event(s)</span>
                         </header>
 
-                        <div class="space-y-2 max-h-[250px] overflow-y-auto pr-1 custom-scrollbar">
-                            {% if holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) %}
-                            <div class="px-2 py-1.5 bg-red-500/10 border border-red-500/20 rounded-lg">
-                                <p class="text-[9px] font-900 text-red-500 uppercase tracking-tighter">🎉 {{
-                                    holidays.get("2026-02-" ~ (day if day > 9 else "0" ~ day)) }}</p>
+                        <div class="space-y-3 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+                            {% if holidays.get(date_key) %}
+                            <div class="px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-xl">
+                                <p class="text-[10px] font-900 text-red-400 uppercase tracking-widest">🎉 {{
+                                    holidays.get(date_key) }}</p>
+                            </div>
+                            {% endif %}
+
+                            {% if day_idx == 0 %}
+                            <div class="px-3 py-2 bg-gray-500/10 border border-white/5 rounded-xl">
+                                <p class="text-[9px] font-900 text-gray-500 uppercase tracking-widest">🚫 Rec Centre
+                                    Closed</p>
+                                <p class="text-[7px] text-gray-600 mt-1 uppercase font-bold tracking-tighter">Sports
+                                    bookings restricted</p>
                             </div>
                             {% endif %}
 
                             {% for b in bookings_by_day.get(day) %}
-                            <div class="p-2 rounded-lg bg-white/[0.02] border border-white/5">
-                                <div class="flex items-center justify-between gap-2 mb-0.5">
-                                    <h4 class="text-[9px] font-800 text-white truncate max-w-[110px]">{{ b.Venue }}</h4>
+                            <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5">
+                                <div class="flex items-center justify-between gap-2 mb-1">
+                                    <h4 class="text-[10px] font-900 text-white truncate max-w-[120px]">{{ b.Venue }}
+                                    </h4>
                                     <span
-                                        class="text-[6px] font-900 uppercase px-1 py-0.5 rounded
+                                        class="text-[7px] font-900 uppercase tracking-tighter px-2 py-0.5 rounded
                                             {% if b.Category == 'sports' %} bg-orange-500/20 text-spjimr-orange 
                                             {% elif b.Category == 'cultural' %} bg-purple-500/20 text-purple-400 
                                             {% elif b.Category == 'academic' %} bg-blue-500/20 text-blue-400 {% endif %}">
                                         {{ b.Category }}
                                     </span>
                                 </div>
-                                <p class="text-[7px] font-bold text-gray-500 flex justify-between">
+                                <div class="flex items-center justify-between text-[8px] font-bold text-gray-500">
                                     <span>{{ b.Requested_By }}</span>
                                     <span class="text-white/30">{{ b.Time_Slot }}</span>
-                                </p>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
@@ -177,7 +211,7 @@
 
 <style>
     .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
+        width: 3px;
     }
 
     .custom-scrollbar::-webkit-scrollbar-track {
@@ -187,10 +221,6 @@
     .custom-scrollbar::-webkit-scrollbar-thumb {
         background: rgba(255, 255, 255, 0.05);
         border-radius: 10px;
-    }
-
-    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.1);
     }
 </style>
 {% endblock %}
