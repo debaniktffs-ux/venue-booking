@@ -265,13 +265,6 @@ async def delete(category: str, index: int):
         
     return RedirectResponse(url=f"/dashboard/{category}", status_code=303)
 
-@app.get("/api/clear-db")
-async def clear_database():
-    if supabase:
-        # Clear all entries where Category is not null (effectively everything)
-        supabase.table("bookings").delete().neq("Category", "").execute()
-    return {"status": "success", "message": "Supabase cleared"}
-
 @app.get("/api/health")
 def health():
     return {"status": "ok", "vercel": os.environ.get("VERCEL", False)}

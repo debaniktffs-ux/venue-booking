@@ -179,7 +179,7 @@
                             </div>
                             {% endif %}
 
-                            {% for b in bookings_by_day.get(day) %}
+                            {% for b in (bookings_by_day.get(day) or []) %}
                             <div class="p-3 rounded-xl bg-white/[0.02] border border-white/5">
                                 <div class="flex items-center justify-between gap-2 mb-1">
                                     <h4 class="text-[10px] font-900 text-white truncate max-w-[120px]">{{ b.Venue }}
