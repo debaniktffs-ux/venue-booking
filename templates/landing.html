@@ -2,57 +2,91 @@
 
 {% block content %}
 <div class="max-w-7xl mx-auto py-12 px-6">
-    <div class="text-center mb-16">
-        <h2 class="text-5xl font-900 text-white tracking-tight mb-4 uppercase">What's on your mind?</h2>
-        <p class="text-gray-500 font-bold uppercase tracking-[0.4em] text-xs">Explore Hubs or Track Campus Life</p>
-    </div>
+    <div class="relative">
+        <!-- Abstract Decoration -->
+        <div
+            class="absolute -top-40 -left-20 w-[600px] h-[600px] bg-spjimr-orange/5 rounded-full blur-[150px] pointer-events-none">
+        </div>
+        <div
+            class="absolute top-20 -right-40 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[150px] pointer-events-none">
+        </div>
 
-    <!-- Hub Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-        <!-- Sports Card -->
-        <a href="/dashboard/sports"
-            class="group relative block rounded-[2.5rem] overflow-hidden glass hover:ring-2 hover:ring-orange-500/50 transition-all duration-500 transform hover:-translate-y-2">
-            <div
-                class="h-56 bg-[url('https://images.unsplash.com/photo-1541252260730-0412e8e2108e?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-60 transition-opacity">
-            </div>
-            <div class="absolute inset-x-0 bottom-0 p-10 pt-20 bg-gradient-to-t from-slate-950 to-transparent">
-                <span
-                    class="px-3 py-1 bg-orange-500/20 text-spjimr-orange text-[10px] font-900 rounded-full border border-orange-500/30 uppercase tracking-widest mb-4 inline-block">Sports
-                    Hub</span>
-                <h3 class="text-3xl font-800 text-white mb-2">Game On</h3>
-                <p class="text-gray-400 text-sm font-medium leading-tight">Courts & Team Games</p>
-            </div>
-        </a>
+        <div class="text-center mb-24 relative z-10">
+            <h2 class="text-6xl font-900 text-white tracking-tight mb-4 uppercase">
+                What's on <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-spjimr-orange to-orange-400">your
+                    mind?</span>
+            </h2>
+            <p
+                class="text-gray-500 font-bold uppercase tracking-[0.5em] text-[10px] bg-white/5 py-2 px-6 rounded-full inline-block border border-white/5 backdrop-blur-3xl">
+                Explore Hubs • Track Campus Life • Book Now</p>
+        </div>
 
-        <!-- Cultural Card -->
-        <a href="/dashboard/cultural"
-            class="group relative block rounded-[2.5rem] overflow-hidden glass hover:ring-2 hover:ring-purple-500/50 transition-all duration-500 transform hover:-translate-y-2">
-            <div
-                class="h-56 bg-[url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-60 transition-opacity">
-            </div>
-            <div class="absolute inset-x-0 bottom-0 p-10 pt-20 bg-gradient-to-t from-slate-950 to-transparent">
-                <span
-                    class="px-3 py-1 bg-purple-500/20 text-purple-400 text-[10px] font-900 rounded-full border border-purple-500/30 uppercase tracking-widest mb-4 inline-block">Cultural
-                    Hub</span>
-                <h3 class="text-3xl font-800 text-white mb-2">Spotlight</h3>
-                <p class="text-gray-400 text-sm font-medium leading-tight">Auditoriums & Gala Stages</p>
-            </div>
-        </a>
+        <!-- Hub Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-32 relative z-10">
+            <!-- Sports Card -->
+            <a href="/dashboard/sports"
+                class="group relative block rounded-[3rem] overflow-hidden glass hover:border-spjimr-orange/30 transition-all duration-700 transform hover:-translate-y-3">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                </div>
+                <div
+                    class="h-64 bg-[url('https://images.unsplash.com/photo-1541252260730-0412e8e2108e?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 opacity-20">
+                </div>
+                <div
+                    class="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent">
+                    <span
+                        class="px-4 py-1.5 bg-orange-500/10 text-spjimr-orange text-[9px] font-900 rounded-full border border-orange-500/20 uppercase tracking-[0.2em] mb-4 inline-block">Sports
+                        Hub</span>
+                    <h3 class="text-4xl font-900 text-white mb-2 tracking-tighter">GAME ON</h3>
+                    <p
+                        class="text-gray-500 text-xs font-medium leading-tight opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        Rec Centre, Squash & Outdoor Courts</p>
+                </div>
+            </a>
 
-        <!-- Academic Card -->
-        <a href="/dashboard/academic"
-            class="group relative block rounded-[2.5rem] overflow-hidden glass hover:ring-2 hover:ring-blue-500/50 transition-all duration-500 transform hover:-translate-y-2">
-            <div
-                class="h-56 bg-[url('https://images.unsplash.com/photo-1523050335456-c466432a76f2?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center opacity-30 group-hover:opacity-60 transition-opacity">
-            </div>
-            <div class="absolute inset-x-0 bottom-0 p-10 pt-20 bg-gradient-to-t from-slate-950 to-transparent">
-                <span
-                    class="px-3 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-900 rounded-full border border-blue-500/30 uppercase tracking-widest mb-4 inline-block">Academic
-                    Hub</span>
-                <h3 class="text-3xl font-800 text-white mb-2">Class Adda</h3>
-                <p class="text-gray-400 text-sm font-medium leading-tight">PD Blocks & NCRs</p>
-            </div>
-        </a>
+            <!-- Cultural Card -->
+            <a href="/dashboard/cultural"
+                class="group relative block rounded-[3rem] overflow-hidden glass hover:border-purple-500/30 transition-all duration-700 transform hover:-translate-y-3">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                </div>
+                <div
+                    class="h-64 bg-[url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 opacity-20">
+                </div>
+                <div
+                    class="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent">
+                    <span
+                        class="px-4 py-1.5 bg-purple-500/10 text-purple-400 text-[9px] font-900 rounded-full border border-purple-500/20 uppercase tracking-[0.2em] mb-4 inline-block">Cultural
+                        Hub</span>
+                    <h3 class="text-4xl font-900 text-white mb-2 tracking-tighter">SPOTLIGHT</h3>
+                    <p
+                        class="text-gray-500 text-xs font-medium leading-tight opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        Auditoriums & Gala Stages</p>
+                </div>
+            </a>
+
+            <!-- Academic Card -->
+            <a href="/dashboard/academic"
+                class="group relative block rounded-[3rem] overflow-hidden glass hover:border-blue-500/30 transition-all duration-700 transform hover:-translate-y-3">
+                <div
+                    class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                </div>
+                <div
+                    class="h-64 bg-[url('https://images.unsplash.com/photo-1523050335456-c466432a76f2?q=80&w=800&auto=format&fit=crop')] bg-cover bg-center grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 opacity-20">
+                </div>
+                <div
+                    class="absolute inset-x-0 bottom-0 p-10 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent">
+                    <span
+                        class="px-4 py-1.5 bg-blue-500/10 text-blue-400 text-[9px] font-900 rounded-full border border-blue-500/20 uppercase tracking-[0.2em] mb-4 inline-block">Academic
+                        Hub</span>
+                    <h3 class="text-4xl font-900 text-white mb-2 tracking-tighter">SUCCESS</h3>
+                    <p
+                        class="text-gray-500 text-xs font-medium leading-tight opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        NCR Rooms & Class Addas</p>
+                </div>
+            </a>
+        </div>
     </div>
 
     <!-- Dynamic Campus Calendar -->
