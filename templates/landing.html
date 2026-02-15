@@ -112,7 +112,8 @@
 
                 <div class="mt-8 space-y-2">
                     <!-- Holiday Inline Label -->
-                    {% set date_key = "2026-02-" ~ (day if day > 9 else "0" ~ day) %}
+                    {% set date_key = year ~ "-" ~ (month if month > 9 else "0" ~ month) ~ "-" ~ (day if day > 9 else
+                    "0" ~ day) %}
                     {% if holidays.get(date_key) %}
                     <div class="inline-block px-1.5 py-0.5 bg-red-500/10 border border-red-500/20 rounded-md">
                         <span class="text-[7px] font-900 text-red-400 uppercase tracking-tighter">{{
@@ -133,7 +134,7 @@
                     {% if bookings_by_day.get(day) %}
                     <div class="flex flex-wrap gap-1.5 pt-2">
                         {% set shown_cats = [] %}
-                        {% for b in bookings_by_day.get(day)|sort(attribute='Category') %}
+                        {% for b in (bookings_by_day.get(day) or [])|sort(attribute='Category') %}
                         {% if b.Category not in shown_cats %}
                         <div
                             class="w-1.5 h-1.5 rounded-full ring-1 ring-black/20
@@ -155,8 +156,8 @@
                     <div
                         class="glass p-5 rounded-3xl shadow-2xl border-white/10 backdrop-blur-3xl ring-1 ring-white/10">
                         <header class="mb-4 flex items-center justify-between border-b border-white/5 pb-2">
-                            <span class="text-[9px] font-900 text-gray-400 uppercase tracking-widest">Feb {{ day }} ({{
-                                ['MON','TUE','WED','THU','FRI','SAT','SUN'][day_idx] }})</span>
+                            <span class="text-[9px] font-900 text-gray-400 uppercase tracking-widest">{{ month_name[:3]
+                                }} {{ day }} ({{ ['MON','TUE','WED','THU','FRI','SAT','SUN'][day_idx] }})</span>
                             <span class="text-[8px] font-900 text-white/40">{{ bookings_by_day.get(day)|length if
                                 bookings_by_day.get(day) else 0 }} Event(s)</span>
                         </header>

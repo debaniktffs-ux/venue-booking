@@ -166,6 +166,7 @@ async def landing(request: Request):
         "request": request,
         "calendar": cal,
         "month_name": calendar.month_name[today.month],
+        "month": today.month,
         "year": today.year,
         "today": today.day,
         "bookings_by_day": bookings_by_day,
