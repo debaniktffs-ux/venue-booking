@@ -265,27 +265,12 @@ async def delete(category: str, index: int):
         
     return RedirectResponse(url=f"/dashboard/{category}", status_code=303)
 
-@app.get("/api/seed")
-async def seed_data():
-    import random
-    from datetime import timedelta
-    names = ["Spin Club", "Dance Society", "Tech Hub", "MBA Batch A", "PGP Team", "Cricket XIX", "Admin", "Dean Office", "Music Club"]
-    start_date = dt_date(2026, 2, 1)
-    
-    for _ in range(200):
-        cat_id = random.choice(list(CATEGORIES.keys()))
-        cat_conf = CATEGORIES[cat_id]
-        venue = random.choice(cat_conf["venues"])
-        if venue == "Other (Manual Entry)":
-            venue = cat_conf["venues"][0]
-        b_type = random.choice(cat_conf.get("types", ["General"])) if cat_conf.get("types") else ""
-        random_days = random.randint(0, 50)
-        curr_date = (start_date + timedelta(days=random_days)).strftime("%Y-%m-%d")
-        slot = random.choice(TIME_SLOTS)
-        requester = random.choice(names)
-        save_booking_data(cat_id, b_type, venue, curr_date, slot, requester)
-        
-    return {"status": "success", "message": "200 test entries created across all categories"}
+@app.get("/api/clear-db")
+async def clear_database():
+    if supabase:
+        # Clear all entries where Category is not null (effectively everything)
+        supabase.table("bookings").delete().neq("Category", "").execute()
+    return {"status": "success", "message": "Supabase cleared"}
 
 @app.get("/api/health")
 def health():
