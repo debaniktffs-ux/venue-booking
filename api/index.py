@@ -13,16 +13,13 @@ from supabase import create_client, Client
 app = FastAPI()
 
 # --- CONFIGURATION ---
-# Use /tmp for Vercel writable access (ephemeral)
 if os.environ.get("VERCEL"):
     BOOKINGS_FILE = "/tmp/bookings.csv"
-    # Ensure /tmp is actually used correctly
     if not os.path.exists("/tmp"):
         os.makedirs("/tmp", exist_ok=True)
 else:
     BOOKINGS_FILE = "bookings.csv"
 
-# Supabase Setup (Optional)
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase: Optional[Client] = None
@@ -32,14 +29,48 @@ if SUPABASE_URL and SUPABASE_KEY:
     except Exception as e:
         print(f"Supabase init error: {e}")
 
-ADMIN_TEAM = ["admin1@spjimr.org", "admin2@spjimr.org", "dean_office@spjimr.org"]
-VENUES = [
-    "MLS Auditorium", 
-    "Gyan Auditorium", 
-    "Yoga Room", 
-    "Recess Area near Acad Block", 
-    "Other (Manual Entry)"
-]
+CATEGORIES = {
+    "sports": {
+        "title": "Sports Hub",
+        "description": "Rec Centre & Outdoor Courts",
+        "accent": "orange",
+        "venues": [
+            "Rec Centre - 1st Floor", "Rec Centre - Squash Court 1", "Rec Centre - Squash Court 2",
+            "Rec Centre - Yoga Room", "Rec Centre - Table Tennis Table1", "Rec Centre - Table Tennis Table2",
+            "Rec Centre - Table Tennis Table3", "Rec Centre - Pool Table", "Rec Centre - Terrace (Pickleball)",
+            "Rec Centre - Terrace (Cricket)", "AH Wadia School (Basketball)", "B30 Volleyball Court",
+            "Other (Manual Entry)"
+        ],
+        "draft_label": "Whatsapp Game Invite",
+        "draft_type": "whatsapp"
+    },
+    "cultural": {
+        "title": "Cultural Hub",
+        "description": "Auditoriums & Event Spaces",
+        "accent": "purple",
+        "venues": [
+            "MLS Auditorium", "Gyan Auditorium", "Yoga Room", 
+            "Recess Area near Acad Block", "Other (Manual Entry)"
+        ],
+        "draft_label": "Email Approval Draft",
+        "draft_type": "email"
+    },
+    "academic": {
+        "title": "Academic Hub",
+        "description": "NCR Rooms & PD Blocks",
+        "accent": "blue",
+        "venues": [
+            "B Block - Room 101", "B Block - Room 102",
+            "C Block - Room 201", "C Block - Room 202", "D Block - Room 301", "D Block - Room 302",
+            "Dome 1", "Dome 2", "Dome 3", "NCR 1", "NCR 2", "NCR 3", "NCR 4", "NCR 5",
+            "NCR 6", "NCR 7", "NCR 8", "Other (Manual Entry)"
+        ],
+        "types": ["Class Adda", "PD Club Session"],
+        "draft_label": "Email Approval Draft",
+        "draft_type": "email"
+    }
+}
+
 TIME_SLOTS = [
     "08:00 AM - 10:00 AM", "10:00 AM - 12:00 PM",
     "12:00 PM - 02:00 PM", "02:00 PM - 04:00 PM",
@@ -57,113 +88,101 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def init_db():
     if not os.path.exists(BOOKINGS_FILE):
         try:
-            df = pd.DataFrame(columns=["Venue", "Date", "Time_Slot", "Requested_By"])
+            df = pd.DataFrame(columns=["Category", "Type", "Venue", "Date", "Time_Slot", "Requested_By"])
             df.to_csv(BOOKINGS_FILE, index=False)
         except Exception as e:
             print(f"Init error: {e}")
 
-def load_bookings():
-    # Priority 1: Supabase
-    if supabase:
-        try:
-            response = supabase.table("bookings").select("*").execute()
-            df = pd.DataFrame(response.data)
-            if not df.empty:
-                return df.sort_values(by="Date", ascending=False)
-            return pd.DataFrame(columns=["Venue", "Date", "Time_Slot", "Requested_By"])
-        except Exception as e:
-            print(f"Supabase load error: {e}")
-
-    # Priority 2: Local CSV
+def load_bookings(category: Optional[str] = None):
     init_db()
     try:
-        if os.path.exists(BOOKINGS_FILE) and os.path.getsize(BOOKINGS_FILE) > 0:
-            df = pd.read_csv(BOOKINGS_FILE)
-            return df.sort_values(by="Date", ascending=False)
-        return pd.DataFrame(columns=["Venue", "Date", "Time_Slot", "Requested_By"])
+        if supabase:
+            query = supabase.table("bookings").select("*")
+            if category:
+                query = query.eq("Category", category)
+            response = query.execute()
+            df = pd.DataFrame(response.data)
+        else:
+            if os.path.exists(BOOKINGS_FILE) and os.path.getsize(BOOKINGS_FILE) > 0:
+                df = pd.read_csv(BOOKINGS_FILE)
+                if category:
+                    df = df[df["Category"] == category]
+            else:
+                df = pd.DataFrame(columns=["Category", "Type", "Venue", "Date", "Time_Slot", "Requested_By"])
+        
+        # Backward compatibility for 'Type' column
+        if "Type" not in df.columns:
+            df["Type"] = ""
+            
+        return df.sort_values(by="Date", ascending=False)
     except Exception as e:
         print(f"Load error: {e}")
-        return pd.DataFrame(columns=["Venue", "Date", "Time_Slot", "Requested_By"])
+        return pd.DataFrame(columns=["Category", "Type", "Venue", "Date", "Time_Slot", "Requested_By"])
 
-def save_booking_data(venue, date, time_slot, requested_by):
-    # Priority 1: Supabase
+def save_booking_data(category, type_val, venue, date, time_slot, requested_by):
     if supabase:
-        try:
-            data = {
-                "Venue": venue, 
-                "Date": date, 
-                "Time_Slot": time_slot, 
-                "Requested_By": requested_by
-            }
-            supabase.table("bookings").insert(data).execute()
-            return True
-        except Exception as e:
-            print(f"Supabase save error: {e}")
-
-    # Priority 2: Local CSV
-    try:
+        data = {"Category": category, "Type": type_val, "Venue": venue, "Date": date, "Time_Slot": time_slot, "Requested_By": requested_by}
+        supabase.table("bookings").insert(data).execute()
+    else:
         df = load_bookings()
-        new_row = {
-            "Venue": venue, 
-            "Date": date, 
-            "Time_Slot": time_slot, 
-            "Requested_By": requested_by
-        }
+        new_row = {"Category": category, "Type": type_val, "Venue": venue, "Date": date, "Time_Slot": time_slot, "Requested_By": requested_by}
         df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
-        # Force write to /tmp for Vercel
         df.to_csv(BOOKINGS_FILE, index=False)
-        return True
-    except Exception as e:
-        print(f"Save error: {e}")
-        raise e
 
 # --- ROUTES ---
 @app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
-    df = load_bookings()
+async def landing(request: Request):
+    return templates.TemplateResponse("landing.html", {"request": request})
+
+@app.get("/dashboard/{category}", response_class=HTMLResponse)
+async def dashboard(request: Request, category: str):
+    if category not in CATEGORIES:
+        return RedirectResponse(url="/")
+    
+    cat_config = CATEGORIES[category]
+    df = load_bookings(category)
     bookings_list = df.to_dict('records')
     
     today = dt_date.today()
-    month = today.month
-    year = today.year
-    
-    cal = calendar.monthcalendar(year, month)
-    month_name = calendar.month_name[month]
+    cal = calendar.monthcalendar(today.year, today.month)
     
     booked_days = []
     if not df.empty:
         try:
             df['Date_obj'] = pd.to_datetime(df['Date'], errors='coerce')
-            current_month_bookings = df[
-                (df['Date_obj'].dt.month == month) & 
-                (df['Date_obj'].dt.year == year)
-            ]
-            booked_days = current_month_bookings['Date_obj'].dt.day.dropna().unique().tolist()
-        except:
-            booked_days = []
+            booked_days = df[df['Date_obj'].dt.month == today.month]['Date_obj'].dt.day.dropna().unique().tolist()
+        except: pass
 
-    # Get latest booking for mail template
-    latest_booking = bookings_list[0] if bookings_list else None
-    mail_template = ""
-    if latest_booking:
-        mail_template = f"Subject: Venue Reservation Request - {latest_booking['Venue']}\n\nDear Admin Team,\n\nI would like to request a reservation for {latest_booking['Venue']} on {latest_booking['Date']} for the slot {latest_booking['Time_Slot']}.\n\nRequested By: {latest_booking['Requested_By']}\n\nBest regards,\n{latest_booking['Requested_By']}"
+    # Draft Logic
+    draft = ""
+    if bookings_list:
+        latest = bookings_list[0]
+        prefix = f"[{latest.get('Type', '')}] " if latest.get('Type') else ""
+        if cat_config["draft_type"] == "whatsapp":
+            draft = f"Hey everyone! ⚽ I've reserved {latest['Venue']} for a game on {latest['Date']} ({latest['Time_Slot']}). Join in!"
+        else:
+            draft = f"Subject: Venue Reservation Request - {prefix}{latest['Venue']}\n\nDear Admin Team,\n\nI would like to request a reservation for {latest['Venue']} on {latest['Date']} for the slot {latest['Time_Slot']}.\n\nRequested By: {latest['Requested_By']}\n\nBest regards,\n{latest['Requested_By']}"
 
     return templates.TemplateResponse("dashboard.html", {
         "request": request,
-        "venues": VENUES,
+        "category": category,
+        "config": cat_config,
+        "venues": cat_config["venues"],
+        "types": cat_config.get("types", []),
         "time_slots": TIME_SLOTS,
         "bookings": bookings_list,
-        "month_name": month_name,
-        "year": year,
         "calendar": cal,
+        "month_name": calendar.month_name[today.month],
+        "year": today.year,
         "today": today.day,
         "booked_days": booked_days,
-        "admin_team": ", ".join(ADMIN_TEAM),
-        "mail_template": mail_template
+        "draft": draft
     })
 
-@app.post("/book")
+@app.post("/book/{category}")
 async def book(
+    category: str,
+    booking_type: str = Form(None),
     venue: str = Form(...),
     manual_venue: str = Form(None),
     date: str = Form(...),
@@ -175,47 +194,26 @@ async def book(
     # Conflict Check
     df = load_bookings()
     if not df.empty:
-        conflict = df[
-            (df['Venue'] == final_venue) & 
-            (df['Date'] == date) & 
-            (df['Time_Slot'] == time_slot)
-        ]
+        conflict = df[(df['Venue'] == final_venue) & (df['Date'] == date) & (df['Time_Slot'] == time_slot)]
         if not conflict.empty:
-            error_msg = f"Conflict: {final_venue} is already reserved for {date} at {time_slot}."
-            return RedirectResponse(url=f"/?error={urllib.parse.quote(error_msg)}", status_code=303)
+            return RedirectResponse(url=f"/dashboard/{category}?error=Conflict: {final_venue} is already reserved.", status_code=303)
 
-    try:
-        save_booking_data(final_venue, date, time_slot, requested_by)
-    except Exception as e:
-        return RedirectResponse(url=f"/?error={urllib.parse.quote(str(e))}", status_code=303)
-    
-    return RedirectResponse(url="/", status_code=303)
+    save_booking_data(category, booking_type, final_venue, date, time_slot, requested_by)
+    return RedirectResponse(url=f"/dashboard/{category}", status_code=303)
 
-@app.post("/delete/{index}")
-async def delete_booking_route(index: int):
-    # This is trickier with Supabase, ideally we'd use an ID. 
-    # For now, we'll fetch all, drop, and overwrite (if using CSV) 
-    # or implement proper delete if we add IDs to the table.
+@app.post("/delete/{category}/{index}")
+async def delete(category: str, index: int):
+    # Fetch filtered bookings to get the correct absolute index
+    df_all = load_bookings()
+    df_cat = df_all[df_all["Category"] == category]
     
-    df = load_bookings()
-    if 0 <= index < len(df):
-        try:
-            if supabase:
-                # Need an identifier. For now, we'll use a simple match (risky, but works for E2E)
-                target = df.iloc[index]
-                supabase.table("bookings").delete().match({
-                    "Venue": target["Venue"],
-                    "Date": target["Date"],
-                    "Time_Slot": target["Time_Slot"]
-                }).execute()
-            else:
-                df = df.drop(df.index[index]).reset_index(drop=True)
-                df.to_csv(BOOKINGS_FILE, index=False)
-        except Exception as e:
-            return RedirectResponse(url=f"/?error={urllib.parse.quote(str(e))}", status_code=333)
-            
-    return RedirectResponse(url="/", status_code=303)
+    if 0 <= index < len(df_cat):
+        actual_index = df_cat.index[index]
+        df_all = df_all.drop(actual_index).reset_index(drop=True)
+        df_all.to_csv(BOOKINGS_FILE, index=False)
+        
+    return RedirectResponse(url=f"/dashboard/{category}", status_code=303)
 
 @app.get("/api/health")
 def health():
-    return {"status": "ok", "vercel": os.environ.get("VERCEL", False), "supabase": bool(supabase)}
+    return {"status": "ok", "vercel": os.environ.get("VERCEL", False)}

@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-12 px-6">
+    <div class="text-center mb-16">
+        <h2 class="text-4xl font-900 text-white tracking-tight mb-4 uppercase">Hub Selection</h2>
+        <p class="text-gray-500 font-bold uppercase tracking-[0.3em] text-xs">Choose your venue category to begin</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Sports Card -->
+        <a href="/dashboard/sports"
+            class="group relative block rounded-3xl overflow-hidden glass hover:ring-2 hover:ring-orange-500/50 transition-all duration-500 transform hover:-translate-y-2">
+            <div
+                class="h-48 bg-[url('https://images.unsplash.com/photo-1541252260730-0412e8e2108e?q=80&w=600&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity">
+            </div>
+            <div class="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-slate-950 to-transparent">
+                <div class="flex items-center justify-between mb-4">
+                    <span
+                        class="px-3 py-1 bg-orange-500/20 text-spjimr-orange text-[10px] font-900 rounded-full border border-orange-500/30 uppercase tracking-widest">Active
+                        Now</span>
+                    <div
+                        class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center text-spjimr-orange">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z" />
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-800 text-white mb-2">Sports Hub</h3>
+                <p class="text-gray-400 text-xs font-medium leading-relaxed">Rec Centre, Squash Courts, Table Tennis &
+                    More</p>
+            </div>
+        </a>
+
+        <!-- Cultural Card -->
+        <a href="/dashboard/cultural"
+            class="group relative block rounded-3xl overflow-hidden glass hover:ring-2 hover:ring-purple-500/50 transition-all duration-500 transform hover:-translate-y-2">
+            <div
+                class="h-48 bg-[url('https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=600&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity">
+            </div>
+            <div class="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-slate-950 to-transparent">
+                <div class="flex items-center justify-between mb-4">
+                    <span
+                        class="px-3 py-1 bg-purple-500/20 text-purple-400 text-[10px] font-900 rounded-full border border-purple-500/30 uppercase tracking-widest">Premium</span>
+                    <div class="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-400">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M11.5 22C6.25 22 2 17.75 2 12.5S6.25 3 11.5 3 21 7.25 21 12.5 16.75 22 11.5 22zm0-17.5C7.36 4.5 4 7.86 4 12s3.36 7.5 7.5 7.5 7.5-3.36 7.5-7.5-3.36-7.5-7.5-7.5z" />
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-800 text-white mb-2">Cultural Hub</h3>
+                <p class="text-gray-400 text-xs font-medium leading-relaxed">Auditoriums, Recess Area & Gala Stages</p>
+            </div>
+        </a>
+
+        <!-- Academic Card -->
+        <a href="/dashboard/academic"
+            class="group relative block rounded-3xl overflow-hidden glass hover:ring-2 hover:ring-blue-500/50 transition-all duration-500 transform hover:-translate-y-2">
+            <div
+                class="h-48 bg-[url('https://images.unsplash.com/photo-1523050335456-c466432a76f2?q=80&w=600&auto=format&fit=crop')] bg-cover bg-center opacity-40 group-hover:opacity-60 transition-opacity">
+            </div>
+            <div class="absolute inset-x-0 bottom-0 p-8 pt-20 bg-gradient-to-t from-slate-950 to-transparent">
+                <div class="flex items-center justify-between mb-4">
+                    <span
+                        class="px-3 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-900 rounded-full border border-blue-500/30 uppercase tracking-widest">Official</span>
+                    <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3z" />
+                        </svg>
+                    </div>
+                </div>
+                <h3 class="text-2xl font-800 text-white mb-2">Academic Hub</h3>
+                <p class="text-gray-400 text-xs font-medium leading-relaxed">NCR Classrooms, Domes & Study Blocks</p>
+            </div>
+        </a>
+    </div>
+</div>
+{% endblock %}
