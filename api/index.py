@@ -8,5 +8,6 @@ app = FastAPI()
 def health_check():
     return {"status": "ok"}
 
-# Mount the Gradio app to the FastAPI instance
+import os
+print(f"Starting Vercel App... Filesystem: {'Read-Only' if not os.access('/', os.W_OK) else 'Writable'}")
 app = gr.mount_gradio_app(app, demo, path="/")

@@ -6,7 +6,8 @@ import os
 import urllib.parse
 
 # Path to the bookings file
-BOOKINGS_FILE = "bookings.csv"
+# Path to the bookings file - use /tmp for Vercel writable access
+BOOKINGS_FILE = "/tmp/bookings.csv" if os.environ.get("VERCEL") else "bookings.csv"
 
 # Admin team list
 ADMIN_TEAM = ["admin1@spjimr.org", "admin2@spjimr.org", "dean_office@spjimr.org"]
@@ -164,6 +165,14 @@ CUSTOM_CSS = f"""
     border-bottom-color: #A29BFE !important;
 }}
 
+/* Fix dropdown overlap issues */
+.gradio-container .select-wrap {{
+    z-index: 100 !important;
+}}
+.gradio-container .datetime-picker {{
+    z-index: 50 !important;
+}}
+
 /* Calendar Specific Styles */
 .calendar-widget {{
     background: var(--block-background-fill);
@@ -307,7 +316,16 @@ CUSTOM_CSS = f"""
 }}
 """
 
+def init_bookings():
+    if not os.path.exists(BOOKINGS_FILE):
+        try:
+            df = pd.DataFrame(columns=["Venue", "Date", "Time Slot", "Requested By"])
+            df.to_csv(BOOKINGS_FILE, index=False)
+        except Exception as e:
+            print(f"Error initializing bookings file: {e}")
+
 def load_bookings():
+    init_bookings()
     try:
         if os.path.exists(BOOKINGS_FILE) and os.path.getsize(BOOKINGS_FILE) > 0:
             df = pd.read_csv(BOOKINGS_FILE)
@@ -319,6 +337,7 @@ def load_bookings():
         return pd.DataFrame(columns=["Venue", "Date", "Time Slot", "Requested By"])
     except Exception as e:
         print(f"Error loading bookings: {e}")
+        # Ensure we return an empty dataframe even on failure to avoid cascading errors
         return pd.DataFrame(columns=["Venue", "Date", "Time Slot", "Requested By"])
 
 def generate_calendar_html(df=None):
@@ -434,7 +453,8 @@ Recipients: {', '.join(ADMIN_TEAM)}
 """
         return template
     except Exception as e:
-        return f"Template Error: {e}"
+        print(f"Template generation error: {e}")
+        return f"Template Error: {str(e)}. Please check if you have at least one booking."
 
 def get_gmail_link(template):
     if not template or "No recent bookings" in template or "Error" in template:
@@ -493,7 +513,14 @@ time_slots = [
 
 with gr.Blocks(title="SPJIMR Venue Management", css=CUSTOM_CSS, theme=gr.themes.Default(primary_hue="orange", secondary_hue="slate")) as demo:
     with gr.Row(elem_classes="header-container"):
-        logo_path = os.path.join(os.path.dirname(__file__), "spjimr_logo.png")
+        # Look for logo in local or api folder
+        logo_path = "spjimr_logo.png"
+        if os.environ.get("VERCEL"):
+            # Vercel's working directory might be different
+            logo_path = os.path.join(os.path.dirname(__file__), "spjimr_logo.png")
+            if not os.path.exists(logo_path):
+                logo_path = os.path.join(os.path.dirname(__file__), "api", "spjimr_logo.png")
+        
         gr.Image(logo_path, show_label=False, container=False, width=130, interactive=False)
         with gr.Column(elem_classes="title-block"):
             gr.Markdown("# Venue Booking Portal")
@@ -581,7 +608,9 @@ with gr.Blocks(title="SPJIMR Venue Management", css=CUSTOM_CSS, theme=gr.themes.
     
     def on_refresh():
         df = load_bookings()
-        return df, generate_calendar_html(df)
+        cal_html = generate_calendar_html(df)
+        msg = "### Availability Overview\nNo bookings yet for this month." if df.empty else "### Monthly Availability Overview"
+        return df, cal_html
 
     refresh_btn.click(on_refresh, outputs=[history_table, calendar_display])
     refresh_mail_btn.click(
