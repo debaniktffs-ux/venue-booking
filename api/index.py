@@ -140,38 +140,43 @@ def save_booking_data(category, type_val, venue, date, time_slot, requested_by):
 # --- ROUTES ---
 @app.get("/", response_class=HTMLResponse)
 async def landing(request: Request):
-    df = load_bookings()
-    today = dt_date.today()
-    cal = calendar.monthcalendar(today.year, today.month)
-    
-    bookings_by_day = {}
-    if not df.empty:
-        df['Date_obj'] = pd.to_datetime(df['Date'], errors='coerce')
-        current_month = df[df['Date_obj'].dt.month == today.month]
+    try:
+        df = load_bookings()
+        today = dt_date.today()
+        cal = calendar.monthcalendar(today.year, today.month)
         
-        for _, row in current_month.iterrows():
-            d = row['Date_obj'].day
-            if d not in bookings_by_day:
-                bookings_by_day[d] = []
+        bookings_by_day = {}
+        if not df.empty:
+            df['Date_obj'] = pd.to_datetime(df['Date'], errors='coerce')
+            current_month = df[df['Date_obj'].dt.month == today.month]
             
-            bookings_by_day[d].append({
-                "Category": row['Category'],
-                "Venue": row['Venue'],
-                "Time_Slot": row['Time_Slot'],
-                "Requested_By": row['Requested_By'],
-                "Type": row.get('Type', '')
-            })
+            for _, row in current_month.iterrows():
+                if pd.isna(row['Date_obj']): continue
+                d = row['Date_obj'].day
+                if d not in bookings_by_day:
+                    bookings_by_day[d] = []
+                
+                bookings_by_day[d].append({
+                    "Category": row['Category'],
+                    "Venue": row['Venue'],
+                    "Time_Slot": row['Time_Slot'],
+                    "Requested_By": row['Requested_By'],
+                    "Type": row.get('Type', '')
+                })
 
-    return templates.TemplateResponse("landing.html", {
-        "request": request,
-        "calendar": cal,
-        "month_name": calendar.month_name[today.month],
-        "month": today.month,
-        "year": today.year,
-        "today": today.day,
-        "bookings_by_day": bookings_by_day,
-        "holidays": GOVT_HOLIDAYS
-    })
+        return templates.TemplateResponse("landing.html", {
+            "request": request,
+            "calendar": cal,
+            "month_name": calendar.month_name[today.month],
+            "month": today.month,
+            "year": today.year,
+            "today": today.day,
+            "bookings_by_day": bookings_by_day,
+            "holidays": GOVT_HOLIDAYS
+        })
+    except Exception as e:
+        import traceback
+        return HTMLResponse(content=f"Error: {str(e)}<pre>{traceback.format_exc()}</pre>", status_code=500)
 
 @app.get("/dashboard/{category}", response_class=HTMLResponse)
 async def dashboard(request: Request, category: str):
