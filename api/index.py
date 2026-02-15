@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 from typing import List, Optional
 import urllib.parse
 from supabase import create_client, Client
+import holidays
 
 app = FastAPI()
 
@@ -78,20 +79,63 @@ TIME_SLOTS = [
     "08:00 PM - 10:00 PM", "10:00 PM - 12:00 AM"
 ]
 
-import holidays
-
-# --- CONFIGURATION ---
+# --- HOLIDAY CONFIG ---
 IND_HOLIDAYS = holidays.India(years=[2026])
 GOVT_HOLIDAYS = {date.strftime("%Y-%m-%d"): name for date, name in IND_HOLIDAYS.items()}
-
-# Add local university holidays if needed
 GOVT_HOLIDAYS.update({
     "2026-03-04": "Holi (University Holiday)",
     "2026-11-08": "Diwali (Break)",
 })
 
+# --- SETUP ---
+templates = Jinja2Templates(directory="templates")
+if not os.path.exists("static"):
+    os.makedirs("static", exist_ok=True)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # --- DATA LAYER ---
-# (Skipping init_db, load_bookings, save_booking_data as they are mostly unchanged)
+def init_db():
+    if not os.path.exists(BOOKINGS_FILE):
+        try:
+            df = pd.DataFrame(columns=["Category", "Type", "Venue", "Date", "Time_Slot", "Requested_By"])
+            df.to_csv(BOOKINGS_FILE, index=False)
+        except Exception as e:
+            print(f"Init error: {e}")
+
+def load_bookings(category: Optional[str] = None):
+    init_db()
+    try:
+        if supabase:
+            query = supabase.table("bookings").select("*")
+            if category:
+                query = query.eq("Category", category)
+            response = query.execute()
+            df = pd.DataFrame(response.data)
+        else:
+            if os.path.exists(BOOKINGS_FILE) and os.path.getsize(BOOKINGS_FILE) > 0:
+                df = pd.read_csv(BOOKINGS_FILE)
+                if category:
+                    df = df[df["Category"] == category]
+            else:
+                df = pd.DataFrame(columns=["Category", "Type", "Venue", "Date", "Time_Slot", "Requested_By"])
+        
+        if "Type" not in df.columns:
+            df["Type"] = ""
+            
+        return df.sort_values(by="Date", ascending=False)
+    except Exception as e:
+        print(f"Load error: {e}")
+        return pd.DataFrame(columns=["Category", "Type", "Venue", "Date", "Time_Slot", "Requested_By"])
+
+def save_booking_data(category, type_val, venue, date, time_slot, requested_by):
+    if supabase:
+        data = {"Category": category, "Type": type_val, "Venue": venue, "Date": date, "Time_Slot": time_slot, "Requested_By": requested_by}
+        supabase.table("bookings").insert(data).execute()
+    else:
+        df = load_bookings()
+        new_row = {"Category": category, "Type": type_val, "Venue": venue, "Date": date, "Time_Slot": time_slot, "Requested_By": requested_by}
+        df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
+        df.to_csv(BOOKINGS_FILE, index=False)
 
 # --- ROUTES ---
 @app.get("/", response_class=HTMLResponse)
@@ -100,7 +144,6 @@ async def landing(request: Request):
     today = dt_date.today()
     cal = calendar.monthcalendar(today.year, today.month)
     
-    # Detailed booking mapping for interactive calendar
     bookings_by_day = {}
     if not df.empty:
         df['Date_obj'] = pd.to_datetime(df['Date'], errors='coerce')
@@ -129,7 +172,49 @@ async def landing(request: Request):
         "holidays": GOVT_HOLIDAYS
     })
 
-# ... dashboard route ...
+@app.get("/dashboard/{category}", response_class=HTMLResponse)
+async def dashboard(request: Request, category: str):
+    if category not in CATEGORIES:
+        return RedirectResponse(url="/")
+    
+    cat_config = CATEGORIES[category]
+    df = load_bookings(category)
+    bookings_list = df.to_dict('records')
+    
+    today = dt_date.today()
+    cal = calendar.monthcalendar(today.year, today.month)
+    
+    booked_days = []
+    if not df.empty:
+        try:
+            df['Date_obj'] = pd.to_datetime(df['Date'], errors='coerce')
+            booked_days = df[df['Date_obj'].dt.month == today.month]['Date_obj'].dt.day.dropna().unique().tolist()
+        except: pass
+
+    draft = ""
+    if bookings_list:
+        latest = bookings_list[0]
+        prefix = f"[{latest.get('Type', '')}] " if latest.get('Type') else ""
+        if cat_config["draft_type"] == "whatsapp":
+            draft = f"Hey everyone! ⚽ I've reserved {latest['Venue']} for a game on {latest['Date']} ({latest['Time_Slot']}). Join in!"
+        else:
+            draft = f"Subject: Venue Reservation Request - {prefix}{latest['Venue']}\n\nDear Admin Team,\n\nI would like to request a reservation for {latest['Venue']} on {latest['Date']} for the slot {latest['Time_Slot']}.\n\nRequested By: {latest['Requested_By']}\n\nBest regards,\n{latest['Requested_By']}"
+
+    return templates.TemplateResponse("dashboard.html", {
+        "request": request,
+        "category": category,
+        "config": cat_config,
+        "venues": cat_config["venues"],
+        "types": cat_config.get("types", []),
+        "time_slots": TIME_SLOTS,
+        "bookings": bookings_list,
+        "calendar": cal,
+        "month_name": calendar.month_name[today.month],
+        "year": today.year,
+        "today": today.day,
+        "booked_days": booked_days,
+        "draft": draft
+    })
 
 @app.post("/book/{category}")
 async def book(
@@ -143,15 +228,13 @@ async def book(
 ):
     final_venue = manual_venue if venue == "Other (Manual Entry)" and manual_venue else venue
     
-    # Monday Closure Logic (Sports Hub)
     if category == "sports":
         booking_date = datetime.strptime(date, "%Y-%m-%d").date()
-        if booking_date.weekday() == 0:  # Monday is 0
+        if booking_date.weekday() == 0:
             if "Rec Centre" in final_venue or "Yoga Room" in final_venue:
                 error_msg = f"Rec Centre is closed on Mondays (Venue: {final_venue})"
                 return RedirectResponse(url=f"/dashboard/{category}?error={urllib.parse.quote(error_msg)}", status_code=303)
 
-    # Conflict Check
     df = load_bookings()
     if not df.empty:
         conflict = df[(df['Venue'] == final_venue) & (df['Date'] == date) & (df['Time_Slot'] == time_slot)]
@@ -163,7 +246,6 @@ async def book(
 
 @app.post("/delete/{category}/{index}")
 async def delete(category: str, index: int):
-    # Fetch filtered bookings to get the correct absolute index
     df_all = load_bookings()
     df_cat = df_all[df_all["Category"] == category]
     
@@ -178,32 +260,20 @@ async def delete(category: str, index: int):
 async def seed_data():
     import random
     from datetime import timedelta
-    
-    # Names for randomization
     names = ["Spin Club", "Dance Society", "Tech Hub", "MBA Batch A", "PGP Team", "Cricket XIX", "Admin", "Dean Office", "Music Club"]
-    
-    # Start date around current month
     start_date = dt_date(2026, 2, 1)
     
     for _ in range(200):
         cat_id = random.choice(list(CATEGORIES.keys()))
         cat_conf = CATEGORIES[cat_id]
-        
         venue = random.choice(cat_conf["venues"])
-        # Avoid manual entry for seed
         if venue == "Other (Manual Entry)":
             venue = cat_conf["venues"][0]
-            
         b_type = random.choice(cat_conf.get("types", ["General"])) if cat_conf.get("types") else ""
-        
-        # Random date in Feb or March
         random_days = random.randint(0, 50)
         curr_date = (start_date + timedelta(days=random_days)).strftime("%Y-%m-%d")
-        
         slot = random.choice(TIME_SLOTS)
         requester = random.choice(names)
-        
-        # Check conflict before seeding to keep it clean (optional for seed but good practice)
         save_booking_data(cat_id, b_type, venue, curr_date, slot, requester)
         
     return {"status": "success", "message": "200 test entries created across all categories"}
