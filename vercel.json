@@ -1,5 +1,10 @@
 {
+  "rewriteDestinations": true,
   "rewrites": [
+    {
+      "source": "/(index.py)?",
+      "destination": "/api/index"
+    },
     {
       "source": "/(.*)",
       "destination": "/api/index"

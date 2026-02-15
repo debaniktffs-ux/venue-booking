@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPJIMR Venue Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --spjimr-orange: #F37021;
+            --spjimr-purple: #512D6D;
+        }
+        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; }
+        .bg-spjimr-purple { background-color: var(--spjimr-purple); }
+        .text-spjimr-purple { color: var(--spjimr-purple); }
+        .border-spjimr-purple { border-color: var(--spjimr-purple); }
+        .bg-spjimr-orange { background-color: var(--spjimr-orange); }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white border-b-4 border-spjimr-purple shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <img src="/static/logo.png" alt="SPJIMR Logo" class="h-12 w-auto">
+                <div class="hidden md:block">
+                    <h1 class="text-2xl font-800 text-spjimr-purple tracking-tight leading-none uppercase">Venue Booking Portal</h1>
+                    <p class="text-xs text-gray-400 font-medium tracking-widest mt-1 uppercase">Academic Block • Cultural Events</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-sm font-semibold">
+                <a href="#" class="text-spjimr-purple hover:text-orange-500 transition-colors">Dashboard</a>
+                <a href="#history" class="text-gray-500 hover:text-spjimr-purple transition-colors">History</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center py-10 text-gray-400 text-xs font-medium uppercase tracking-widest">
+        Created by Debanik Mukherjee &bull; SPJIMR Bhavan's Campus
+    </footer>
+</body>
+</html>
