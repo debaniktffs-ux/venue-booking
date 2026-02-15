@@ -9,7 +9,6 @@ from fastapi.templating import Jinja2Templates
 from typing import List, Optional
 import urllib.parse
 from supabase import create_client, Client
-import holidays
 
 app = FastAPI()
 
@@ -80,12 +79,16 @@ TIME_SLOTS = [
 ]
 
 # --- HOLIDAY CONFIG ---
-IND_HOLIDAYS = holidays.India(years=[2026])
-GOVT_HOLIDAYS = {date.strftime("%Y-%m-%d"): name for date, name in IND_HOLIDAYS.items()}
-GOVT_HOLIDAYS.update({
+GOVT_HOLIDAYS = {
+    "2026-01-26": "Republic Day",
     "2026-03-04": "Holi (University Holiday)",
+    "2026-03-27": "Eid-ul-Fitr",
+    "2026-04-10": "Good Friday",
+    "2026-08-15": "Independence Day",
+    "2026-10-02": "Gandhi Jayanti",
+    "2026-10-21": "Dussehra",
     "2026-11-08": "Diwali (Break)",
-})
+}
 
 # --- SETUP ---
 templates = Jinja2Templates(directory="templates")
@@ -152,7 +155,7 @@ async def landing(request: Request):
             
             for _, row in current_month.iterrows():
                 if pd.isna(row['Date_obj']): continue
-                d = row['Date_obj'].day
+                d = int(row['Date_obj'].day)
                 if d not in bookings_by_day:
                     bookings_by_day[d] = []
                 
@@ -176,7 +179,7 @@ async def landing(request: Request):
         })
     except Exception as e:
         import traceback
-        return HTMLResponse(content=f"Error: {str(e)}<pre>{traceback.format_exc()}</pre>", status_code=500)
+        return HTMLResponse(content=f"Error in landing route: {str(e)}<pre>{traceback.format_exc()}</pre>", status_code=500)
 
 @app.get("/dashboard/{category}", response_class=HTMLResponse)
 async def dashboard(request: Request, category: str):
@@ -194,7 +197,7 @@ async def dashboard(request: Request, category: str):
     if not df.empty:
         try:
             df['Date_obj'] = pd.to_datetime(df['Date'], errors='coerce')
-            booked_days = df[df['Date_obj'].dt.month == today.month]['Date_obj'].dt.day.dropna().unique().tolist()
+            booked_days = df[df['Date_obj'].dt.month == today.month]['Date_obj'].dt.day.dropna().astype(int).unique().tolist()
         except: pass
 
     draft = ""
