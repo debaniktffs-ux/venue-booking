@@ -65,9 +65,155 @@
             background: var(--spjimr-orange);
         }
     </style>
+    <script>
+        function openDocs() {
+            console.log("Attempting to open documentation modal...");
+            const modal = document.getElementById('docsModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+                console.log("Modal opened successfully.");
+            } else {
+                console.error("CRITICAL ERROR: 'docsModal' element not found in the DOM.");
+            }
+        }
+
+        function closeDocs() {
+            console.log("Closing documentation modal...");
+            const modal = document.getElementById('docsModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
+        // Close on ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDocs();
+        });
+    </script>
 </head>
 
 <body class="min-h-screen selection:bg-orange-500/30">
+    <!-- Documentation Modal -->
+    <div id="docsModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-6">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md" onclick="closeDocs()"></div>
+        <div
+            class="glass w-full max-w-4xl max-h-[80vh] rounded-[2rem] relative z-10 overflow-hidden flex flex-col shadow-2xl border-white/10">
+            <header class="p-8 border-b border-white/5 flex items-center justify-between bg-white/5">
+                <div>
+                    <h2 class="text-2xl font-800 text-white tracking-tight">Portal Documentation</h2>
+                    <p class="text-[10px] text-spjimr-orange font-bold uppercase tracking-[0.2em] mt-1">Guidelines &
+                        Operational Workflow</p>
+                </div>
+                <button onclick="closeDocs()"
+                    class="p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-all text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                        </path>
+                    </svg>
+                </button>
+            </header>
+
+            <div class="p-8 overflow-y-auto space-y-10 custom-scrollbar">
+                <!-- Internal Records Section -->
+                <section>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-spjimr-orange/10 rounded-lg text-spjimr-orange">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-800 text-white">Internal Records</h3>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed pl-13">
+                        This portal serves as the primary institutional ledger for venue allocation. Every reservation
+                        recorded here constitutes an official intent for venue usage and is used for audit and
+                        scheduling purposes.
+                    </p>
+                </section>
+
+                <!-- Approval Workflow Section -->
+                <section>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-blue-500/10 rounded-lg text-blue-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-800 text-white">Approval Workflow</h3>
+                    </div>
+                    <div class="pl-13 space-y-3">
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            Securing a slot on the dashboard is the first step. Once a reservation is made:
+                        </p>
+                        <ul class="list-disc list-inside text-sm text-gray-500 space-y-2 marker:text-spjimr-orange">
+                            <li>A <span class="text-white font-semibold">Mail Template</span> is automatically triggered
+                                in the sidebar.</li>
+                            <li>Users <span class="text-white font-semibold">must send this template</span> to the
+                                requested faculty member.</li>
+                            <li>Official approval is only granted once the faculty responds affirmatively to this email.
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Record Management Section -->
+                <section>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-purple-500/10 rounded-lg text-purple-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-800 text-white">Record Management</h3>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed pl-13">
+                        Integrity of data is crucial. If a request is <span
+                            class="text-red-400 font-bold uppercase">denied</span> or <span
+                            class="text-red-400 font-bold uppercase">cancelled</span>, users are strictly required to
+                        delete the corresponding entry from the <span class="text-white">'Booking History'</span>
+                        immediately. Approved records must be maintained as active.
+                    </p>
+                </section>
+
+                <!-- Submission Rules Section -->
+                <section>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="p-2 bg-green-500/10 rounded-lg text-green-400">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-800 text-white">Submission Protocol</h3>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed pl-13 border-l-2 border-spjimr-orange ml-2">
+                        Reservations must be submitted by <span
+                            class="text-white font-bold uppercase underline decoration-spjimr-orange underline-offset-4">authorized
+                            club representatives</span> only. Unauthorized submissions will be flagged and removed.
+                    </p>
+                </section>
+            </div>
+
+            <footer class="p-8 border-t border-white/5 bg-white/[0.02]">
+                <button onclick="closeDocs()"
+                    class="w-full bg-spjimr-orange hover:bg-orange-600 text-white font-800 py-4 rounded-2xl transition-all shadow-xl shadow-orange-500/20 uppercase tracking-widest text-xs">
+                    I Understand
+                </button>
+            </footer>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="glass sticky top-0 z-50 border-b border-white/5">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -85,8 +231,9 @@
             <div class="flex items-center gap-8">
                 <div
                     class="hidden md:flex items-center gap-6 text-xs font-bold uppercase tracking-widest text-gray-400">
-                    <a href="/" class="text-white border-b-2 border-spjimr-orange pb-1">Dashboard</a>
-                    <a href="#" class="hover:text-white transition-colors">Documentation</a>
+                    <a href="/" class="hover:text-white transition-colors">Dashboard</a>
+                    <button type="button" onclick="openDocs()"
+                        class="hover:text-white transition-colors uppercase tracking-widest cursor-pointer outline-none border-none bg-transparent p-0">Documentation</button>
                 </div>
                 <button
                     class="bg-spjimr-orange hover:bg-orange-600 text-white text-xs font-800 px-5 py-2.5 rounded-full transition-all shadow-lg shadow-orange-500/20">
@@ -96,7 +243,7 @@
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-6 py-6">
+    <main class="max-w-7xl mx-auto px-6 py-6 font-primary">
         {% block content %}{% endblock %}
     </main>
 
